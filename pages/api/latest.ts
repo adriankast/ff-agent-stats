@@ -1,31 +1,16 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
+import { fetchMissions } from "./_fetchMissions"
 
 type LatestStatsT = {
   year: number;
   month: number;
+  day: number
 };
 
 type ErrorT = {
   message: string;
 };
-
-type MissionT = {
-  location: string;
-  id: string;
-  detailUrl: string;
-  type: string;
-  title: string;
-  alarmDate: number;
-};
-
-async function fetchMissions(id: string, year: number) {
-  const data = await fetch(
-    `https://pd.service.ff-agent.com/hpWidget/${id}/${year}`
-  );
-  const missions: MissionT[] = await data.json();
-  return missions;
-}
 
 export default async function handler(
   req: NextApiRequest,
@@ -45,10 +30,9 @@ export default async function handler(
   const year = today.getFullYear();
   const missions = await fetchMissions(id, year);
 
-  const monthMissions = missions.filter((mission: MissionT) => {
-    const missionTime = new Date(mission.alarmDate);
-    return missionTime.getMonth() === today.getMonth();
-  });
+  const missionDates = missions.map(mission => new Date(mission.alarmDate));
+  const monthMissionDates = missionDates.filter((missionDate) => missionDate.getMonth() === today.getMonth())
+  const dayMissionDates = monthMissionDates.filter(missionDate => missionDate.getDate() === today.getDate())
   
-  res.status(200).json({ year: missions.length, month: monthMissions.length });
+  res.status(200).json({ year: missions.length, month: monthMissionDates.length, day: dayMissionDates.length });
 }
