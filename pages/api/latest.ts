@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { fetchMissions } from "./_fetchMissions"
+import { runCorsMiddleware } from "./_corsMiddleware";
+import { fetchMissions } from "./_fetchMissions";
 
 type LatestStatsT = {
   year: number;
@@ -16,6 +17,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<LatestStatsT | ErrorT>
 ) {
+  await runCorsMiddleware(req, res);
+  
   const { id } = req.query;
   if (!id || typeof id === "object") {
     res
