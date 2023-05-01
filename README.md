@@ -1,38 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FF Agent Stats
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). It proxies requests to the mission statistics API of the [ff-agent](https://www.ff-agent.com/) that can provide data for your help organization.
+
+## Why this proxy API
+
+The API for mission statistics provided by the ff-agent team does not support to be fetched directly from other websites.
+The reason is probably that they provide an iframe to display mission statistics, iframes have no CORS problem since they are sandboxed from the rest of the website.
+But if you want to build a custom statistics integration (e.g. only a small widget for the homepage), you can use this proxy api that allows requests from every domain and forwards them to the ff-agent API and returns the response if successful.
+
+In addition to forwarding the requests, this API also returns the counted statistics instead of objects for every mission.
 
 ## Getting Started
 
-First, run the development server:
+You can either use the hosted version ([ff-agent-stats.vercel.app](https://ff-agent-stats.vercel.app/) hosted for free by Vercel 🙏) of this proxy API directly or fork it on GitHub and host wherever you want.
+Either way you need to get the ID of your ff-agent mission statistics, which you can get by copying it from the iframe snippet that the ff-agent provides.
+See the ID marked red in the example:
+![Screenshot of ff-agent iframe snippet with ID marked in red](ff-agent-stats_how_to_get_id.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+To check whether your ID is working you can use the homepage provided with this Next.JS project and paste it there and click "Fetch Stats".
+
+Finally you can query one of the two possible endpoints to get mission statistics of your help organization:
+
+- `api/latest?id=XXXX-XXX...`: returns the mission count of the current year, month and day
+- `api/year/2023?id=XXXX-XXX...`: returns the mission count of the given year, 2023 in the example
+
+After fetching the data you can display it on your site, e.g., as diagrams.
+The code for fetching from the API could look like:
+
+```js
+const fetchFromApi = async () => {
+  const id = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX";
+  const response = await fetch(`https://ff-agent-stats.vercel.app/api/latest?id=${id}`).catch(err => {
+    throw new Error(`could not fetch from API: ${err}`)
+  })
+  if (!response.ok) {
+    throw new Error(`API returned failure status code: ${response.status} ${response.statusText}`)
+  }
+  const text = await response.text().catch(err => {
+    throw new Error(`could not resolve response text: ${err}`)
+  })
+  return text;
+};
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Disclaimer
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project is in no way directly related/supported/provided by the ff-agent team or product. This also means that no assurances whatsoever can be made that the proxy API will continue functioning, since it entirely depends on the used ff-agent public API.
