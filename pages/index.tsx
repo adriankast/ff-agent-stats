@@ -15,17 +15,18 @@ const fetchFromApi = async (id: string) => {
   return json;
 };
 
+const exampleResponse = `
+Example response: 
+{
+  "year": 148,
+  "month":1,
+  "day":1
+}
+`;
+
 export default function Home() {
   const [agentId, setAgentId] = useState("");
-  const [data, setData] = useState(`
-Example response: 
-    {
-      "year": 148,
-      "month":1,
-      "day":1
-    }
-`
-  );
+  const [data, setData] = useState(exampleResponse);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -33,24 +34,25 @@ Example response:
       <div className="flex flex-col gap-5">
         <div className="flex gap-5 items-center">
           <label htmlFor="agentId" className="text-xl font-semibold">
-            AgentId:</label>
-            <input
-              name="agentId"
-              className="text-black ml-1 w-64 px-2 py-3"
-              type="text"
-              value={agentId}
-              onChange={(e) => {
-                setAgentId(e.target.value);
-              }}
-            />
-          
+            AgentId:
+          </label>
+          <input
+            name="agentId"
+            className="text-black ml-1 w-64 px-2 py-3"
+            type="text"
+            value={agentId}
+            onChange={(e) => {
+              setAgentId(e.target.value);
+            }}
+          />
+
           <button
             type="button"
             className="group rounded-lg border border-gray-800 px-2 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
             onClick={async () => {
               try {
                 const data = await fetchFromApi(agentId);
-                setData(JSON.stringify(data, undefined, 4));
+                setData(JSON.stringify(data, undefined, 2));
               } catch (err: any) {
                 setData(err.message ?? "unknown error");
               }
