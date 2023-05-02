@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { fetchMissions } from "../_fetchMissions"
+import { runCorsMiddleware } from '../_corsMiddleware'
 
 type YearStatsT = {
   year: number;
@@ -13,6 +14,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<YearStatsT | ErrorT>
 ) {
+  // set caching to 1minute
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=60'
+  )
+  await runCorsMiddleware(req, res);
+
   const { id, year } = req.query;
   if (!id || typeof id === "object") {
     res

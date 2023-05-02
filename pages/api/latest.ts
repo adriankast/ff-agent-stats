@@ -17,6 +17,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<LatestStatsT | ErrorT>
 ) {
+  // set caching to 1minute
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=60'
+  )
   await runCorsMiddleware(req, res);
   
   const { id } = req.query;
