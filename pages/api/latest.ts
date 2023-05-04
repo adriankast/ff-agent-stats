@@ -34,13 +34,20 @@ export default async function handler(
     return;
   }
 
-  const today = new Date();
-  const year = today.getFullYear();
-  const missions = await fetchMissions(id, year);
+  const nowUTC = new Date()
+  // ff-agent seems to be only active in germany at the moment, would have to pass timezone if necessary
+  const [strDay, strMonth, strYear]  = nowUTC.toLocaleDateString("de-DE", {timeZone: "Europe/Berlin"}).split(".")
+  const today = {
+    date: Number.parseInt(strDay),
+    month: Number.parseInt(strMonth)-1,
+    year: Number.parseInt(strYear)
+  }
+
+  const missions = await fetchMissions(id, today.year);
 
   const missionDates = missions.map(mission => new Date(mission.alarmDate));
-  const monthMissionDates = missionDates.filter((missionDate) => missionDate.getMonth() === today.getMonth())
-  const dayMissionDates = monthMissionDates.filter(missionDate => missionDate.getDate() === today.getDate())
+  const monthMissionDates = missionDates.filter((missionDate) => missionDate.getMonth() === today.month)
+  const dayMissionDates = monthMissionDates.filter(missionDate => missionDate.getDate() === today.date)
   
   res.status(200).json({ year: missions.length, month: monthMissionDates.length, day: dayMissionDates.length });
 }
