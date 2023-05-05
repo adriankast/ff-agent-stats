@@ -57,7 +57,6 @@ export default async function handler(
 
   const missionDates = missions.map(mission => toGermanTimezoneDate(new Date(mission.alarmDate)));
   const monthMissionDates = missionDates.filter((missionDate) => missionDate.month === today.month)
-  console.log(JSON.stringify(monthMissionDates, undefined, 4));
   const dayMissionDates = monthMissionDates.filter(missionDate => missionDate.date === today.date)
   
   res.status(200).json({ year: missions.length, month: monthMissionDates.length, day: dayMissionDates.length });
