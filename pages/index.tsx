@@ -24,15 +24,46 @@ Example response:
 }
 `;
 
+const examples = [
+  {
+    id: process.env.NEXT_PUBLIC_EXAMPLE_HECHENDORF,
+    label: "FW Hechendorf",
+  },
+  {
+    id: process.env.NEXT_PUBLIC_EXAMPLE_HERRSCHING,
+    label: "FW Herrsching",
+  },
+  {
+    id: process.env.NEXT_PUBLIC_EXAMPLE_TAUFKIRCHEN,
+    label: "FW Taufkirchen",
+  },
+];
+
 export default function Home() {
   const [agentId, setAgentId] = useState("");
   const [data, setData] = useState(exampleResponse);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between gap-10 p-24">
       <h1 className="text-4xl font-semibold">FF Agent Stats</h1>
-      <div className="flex flex-col gap-5">
-        <div className="flex gap-5 items-center">
+      <div className="flex flex-col gap-10">
+        <div className="flex flex-col sm:flex-row gap-5 items-center">
+          <span className="text-xl font-semibold">Insert example:</span>
+
+          {examples.map((example) => (
+            <button
+              className="hover:underline"
+              key={example.id}
+              onClick={() => setAgentId(example.id ?? "")}
+            >
+              {example.label}
+            </button>
+          ))}
+        </div>
+
+        <hr />
+
+        <div className="flex flex-col sm:flex-row gap-5 items-center">
           <label htmlFor="agentId" className="text-xl font-semibold">
             AgentId:
           </label>
@@ -50,6 +81,7 @@ export default function Home() {
             type="button"
             className="group rounded-lg border border-gray-800 px-2 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
             onClick={async () => {
+              setData("fetching...");
               try {
                 const data = await fetchFromApi(agentId);
                 setData(JSON.stringify(data, undefined, 2));
@@ -64,7 +96,7 @@ export default function Home() {
 
         <hr />
 
-        <pre className="w-64 break-words">
+        <pre className="w-64 break-words h-40">
           <code>{data}</code>
         </pre>
       </div>
