@@ -13,6 +13,22 @@ type ErrorT = {
   message: string;
 };
 
+type CustomDateT = {
+  date: number,
+  month: number,
+  year: number
+}
+
+// ff-agent seems to be only active in germany at the moment, would have to pass timezone if necessary
+function toGermanTimezoneDate(date: Date) {
+  const [strDay, strMonth, strYear]  = date.toLocaleDateString("de-DE", {timeZone: "Europe/Berlin"}).split(".")
+  return ({
+    date: Number.parseInt(strDay),
+    month: Number.parseInt(strMonth)-1,
+    year: Number.parseInt(strYear)
+  })
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<LatestStatsT | ErrorT>
@@ -35,20 +51,14 @@ export default async function handler(
   }
 
   const nowUTC = new Date()
-  // ff-agent seems to be only active in germany at the moment, would have to pass timezone if necessary
-  const [strDay, strMonth, strYear]  = nowUTC.toLocaleDateString("de-DE", {timeZone: "Europe/Berlin"}).split(".")
-  const today = {
-    date: Number.parseInt(strDay),
-    month: Number.parseInt(strMonth)-1,
-    year: Number.parseInt(strYear)
-  }
+  const today = toGermanTimezoneDate(nowUTC)
 
   const missions = await fetchMissions(id, today.year);
 
-  const missionDates = missions.map(mission => new Date(mission.alarmDate));
-  const monthMissionDates = missionDates.filter((missionDate) => missionDate.getMonth() === today.month)
+  const missionDates = missions.map(mission => toGermanTimezoneDate(new Date(mission.alarmDate)));
+  const monthMissionDates = missionDates.filter((missionDate) => missionDate.month === today.month)
   console.log(JSON.stringify(monthMissionDates, undefined, 4));
-  const dayMissionDates = monthMissionDates.filter(missionDate => missionDate.getDate() === today.date)
+  const dayMissionDates = monthMissionDates.filter(missionDate => missionDate.date === today.date)
   
   res.status(200).json({ year: missions.length, month: monthMissionDates.length, day: dayMissionDates.length });
 }
