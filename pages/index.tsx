@@ -1,3 +1,5 @@
+import DataDisplay from "@/components/dataDisplay";
+import MultiButton from "@/components/multiButton";
 import { useState } from "react";
 
 const fetchFromApi = async (id: string) => {
@@ -39,9 +41,12 @@ const examples = [
   },
 ];
 
+type DisplayModesT = "visual" | "json";
+
 export default function Home() {
   const [agentId, setAgentId] = useState("");
   const [data, setData] = useState(exampleResponse);
+  const [displayMode, setDisplayMode] = useState<DisplayModesT>("json");
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between gap-10 p-24">
@@ -96,9 +101,21 @@ export default function Home() {
 
         <hr />
 
-        <pre className="w-64 break-words h-40">
-          <code>{data}</code>
-        </pre>
+        <MultiButton
+          options={["visual", "json"]}
+          selectOption={(input: string) =>
+            setDisplayMode(input as DisplayModesT)
+          }
+          selected={displayMode}
+        />
+
+        {displayMode === "visual" ? (
+          <DataDisplay data={data} />
+        ) : (
+          <pre className="w-64 break-words h-40">
+            <code>{data}</code>
+          </pre>
+        )}
       </div>
 
       <a
