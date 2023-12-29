@@ -18,7 +18,6 @@ const fetchFromApi = async (id: string) => {
 };
 
 const exampleResponse = `
-Example response: 
 {
   "year": 148,
   "month":1,
@@ -46,6 +45,7 @@ type DisplayModesT = "visual" | "json";
 export default function Home() {
   const [agentId, setAgentId] = useState("");
   const [data, setData] = useState(exampleResponse);
+  const [dataHint, setDataHint] = useState("Showing example data:")
   const [displayMode, setDisplayMode] = useState<DisplayModesT>("json");
 
   return (
@@ -86,12 +86,15 @@ export default function Home() {
             type="button"
             className="group rounded-lg border border-gray-800 px-2 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
             onClick={async () => {
-              setData("fetching...");
+              setDataHint("fetching...");
+              setData("");
               try {
                 const data = await fetchFromApi(agentId);
                 setData(JSON.stringify(data, undefined, 2));
+                setDataHint("")
               } catch (err: any) {
-                setData(err.message ?? "unknown error");
+                setDataHint(err.message ?? "unknown error");
+                setData("")
               }
             }}
           >
@@ -109,6 +112,7 @@ export default function Home() {
           selected={displayMode}
         />
 
+          {dataHint}
         {displayMode === "visual" ? (
           <DataDisplay data={data} />
         ) : (
