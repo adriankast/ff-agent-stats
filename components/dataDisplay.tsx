@@ -13,7 +13,7 @@ export default function DataDisplay({ data }: Props) {
     <div style={{display: "flex", }}>
       <CircledNumber value={year} label="Year" animationDuration={3100} />
       <CircledNumber value={month} label="Month" animationDuration={1500} />
-      <EmojiedNumber value={20} label="Day" />
+      <EmojiedNumber value={day} label="Day" />
     </div>
   );
 }

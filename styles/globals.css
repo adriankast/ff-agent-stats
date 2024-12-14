@@ -77,3 +77,8 @@ body {
   flex-direction: row;
   vertical-align: center;
 }
+
+#ffEmojiedNumber {
+  word-break: break-all;
+  max-width: 120px;
+}
