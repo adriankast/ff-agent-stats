@@ -46,7 +46,7 @@ export default function Home() {
   const [agentId, setAgentId] = useState("");
   const [data, setData] = useState(exampleResponse);
   const [dataHint, setDataHint] = useState("Showing example data:")
-  const [displayMode, setDisplayMode] = useState<DisplayModesT>("json");
+  const [displayMode, setDisplayMode] = useState<DisplayModesT>("visual");
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between gap-10 p-24">

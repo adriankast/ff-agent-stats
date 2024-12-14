@@ -7,6 +7,10 @@ interface Props {
 }
 
 export default function DataDisplay({ data }: Props) {
+  if (!data) {
+    return null
+  }
+  
   const { year, month, day } = JSON.parse(data);
 
   return (
