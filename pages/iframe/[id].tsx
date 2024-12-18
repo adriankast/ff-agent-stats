@@ -50,7 +50,7 @@ export default function Page() {
   }
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-white">
       {dataHint}
       <div className="flex flex-col gap-10">
         <DataDisplay data={data} lang={lang as "de" | "en"}>
