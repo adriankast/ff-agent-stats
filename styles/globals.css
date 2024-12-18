@@ -82,3 +82,8 @@ body {
   word-break: break-all;
   max-width: 120px;
 }
+
+#ffLink {
+  color: #c90024;
+  text-decoration-color: #c90024;
+}

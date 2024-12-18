@@ -20,7 +20,7 @@ type CustomDateT = {
 }
 
 // ff-agent seems to be only active in germany at the moment, would have to pass timezone if necessary
-function toGermanTimezoneDate(date: Date) {
+function toGermanTimezoneDate(date: Date): CustomDateT {
   const [strDay, strMonth, strYear]  = date.toLocaleDateString("de-DE", {timeZone: "Europe/Berlin"}).split(".")
   return ({
     date: Number.parseInt(strDay),

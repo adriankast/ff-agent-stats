@@ -114,7 +114,7 @@ export default function Home() {
 
           {dataHint}
         {displayMode === "visual" ? (
-          <DataDisplay data={data} />
+          <DataDisplay data={data} lang="en" />
         ) : (
           <pre className="w-64 break-words h-40">
             <code>{data}</code>
