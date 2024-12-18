@@ -19,7 +19,15 @@ See the ID marked red in the example:
 
 To check whether your ID is working you can use the homepage provided with this Next.JS project and paste it there and click "Fetch Stats".
 
-Finally you can query one of the two possible endpoints to get mission statistics of your help organization:
+### Iframe Integration (simple setup)
+
+```html
+<iframe src="https://ff-agent-stats.vercel.app/iframe/<YOUR-AGENT-ID>" height="100" width="300" title="Our Mission Count" style="border: none;"></iframe>
+```
+
+### API Integration (more flexibility)
+
+You can query one of the two possible endpoints to get mission statistics of your help organization:
 
 - `api/latest?id=XXXX-XXX...`: returns the mission count of the current year, month and day
 - `api/year/2023?id=XXXX-XXX...`: returns the mission count of the given year, 2023 in the example
