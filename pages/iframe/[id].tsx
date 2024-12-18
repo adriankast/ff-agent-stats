@@ -22,7 +22,7 @@ export default function Page() {
   const [dataHint, setDataHint] = useState("loading...");
   const router = useRouter();
   const { id } = router.query ?? {};
-  const { lang } = router.query ?? { lang: "de" }; // ff-agent probably only available in germany at the moment
+  const lang = (router.query ?? {}).lang ?? "de"; // ff-agent probably only available in germany at the moment
 
   useEffect(() => {
     setDataHint("loading...");
@@ -44,11 +44,16 @@ export default function Page() {
     );
   }, [id]);
 
+  if (typeof lang !== "string" || !["de", "en"].includes(lang)) {
+    setDataHint("⚠ lang can only be 'de' or 'en'");
+    return <div>{dataHint}</div>;
+  }
+
   return (
-    <main>
+    <main className="min-h-screen">
       {dataHint}
       <div className="flex flex-col gap-10">
-        <DataDisplay data={data}>
+        <DataDisplay data={data} lang={lang as "de" | "en"}>
           <div className="w-10 flex flex-col-reverse items-end">
             <a
               href="https://github.com/adriankast/ff-agent-stats"
@@ -59,7 +64,9 @@ export default function Page() {
                 className="hover:underline text-lg font-extrabold"
                 id="ffLink"
                 title="More information about this dashboard"
-              >?</button>
+              >
+                ?
+              </button>
             </a>
           </div>
         </DataDisplay>
