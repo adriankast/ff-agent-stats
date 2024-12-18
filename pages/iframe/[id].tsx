@@ -52,7 +52,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white">
       {dataHint}
-      <div className="flex flex-col gap-10">
+      <div className="flex justify-center">
         <DataDisplay data={data} lang={lang as "de" | "en"}>
           <div className="w-10 flex flex-col-reverse items-end">
             <a
