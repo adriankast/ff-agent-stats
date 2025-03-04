@@ -1,4 +1,65 @@
-# FF Agent Stats
+# FF Agent Stats (DE, scroll below for english)
+
+Dies ist ein [Next.js](https://nextjs.org/) Projekt, das mit [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) gebootstrapped wurde. Es leitet Anfragen an die Einsatzstatistik-API des [ff-agent](https://www.ff-agent.com/) weiter, die Daten für deine Hilfsorganisation bereitstellen kann.
+
+## Warum diese Proxy-API
+
+Die API für Einsatzstatistiken, die vom ff-agent-Team zur Verfügung gestellt wird, unterstützt es nicht, direkt von anderen Websites abgerufen zu werden.
+Der Grund dafür ist wahrscheinlich, dass sie einen iframe zur Anzeige von Einsatzstatistiken bereitstellen. iframes haben kein CORS-Problem, da sie vom Rest der Website abgeschottet sind.
+Wenn Sie jedoch eine benutzerdefinierte Statistik-Integration erstellen möchten (z. B. nur ein kleines Widget für die Homepage), können Sie diese Proxy-Api verwenden, die Anfragen von jeder Domain zulässt und sie an die ff-agent-API weiterleitet und bei Erfolg die Antwort zurückgibt.
+
+Zusätzlich zur Weiterleitung der Anfragen gibt diese API auch die gezählten Statistiken anstelle von Objekten für jede Mission zurück.
+
+## Erste Schritte
+
+Du kannst entweder die gehostete Version ([ff-agent-stats.vercel.app](https://ff-agent-stats.vercel.app/), die kostenlos von Vercel gehostet wird 🙏) dieser Proxy-API direkt verwenden oder sie auf GitHub forken und hosten, wo immer du willst.
+In jedem Fall musst du die ID der ff-agent-mission-statistics erhalten, die du durch Kopieren aus dem iframe-Snippet, das der ff-agent bereitstellt, erhältst.
+Siehe die rot markierte ID im Beispiel:
+![Screenshot des iframe-Schnipsels von ff-agent mit rot markierter ID](ff-agent-stats_how_to_get_id.png)
+
+Um zu überprüfen, ob die ID funktioniert, kannst du die mit diesem Next.JS-Projekt gelieferte Homepage verwenden, sie dort einfügen und auf „Fetch Stats“ klicken.
+
+### Iframe Integration (einfache Einrichtung)
+
+```html
+<iframe src=„https://ff-agent-stats.vercel.app/iframe/<YOUR-AGENT-ID>“ height=„100“ width=„300“ title=„Aktuelle Einsatzzahlen“ style=„border: none;“></iframe>
+```
+
+### API-Integration (mehr Flexibilität)
+
+Du kannst einen der beiden möglichen Endpunkte abfragen, um Einsatzstatistiken deiner Hilfsorganisation zu erhalten:
+
+- `api/latest?id=XXXX-XXX...`: liefert die Anzahl der Einsätze des aktuellen Jahres, Monats und Tages
+- `api/year/2023?id=XXXX-XXX...`: gibt die Anzahl der Einsätze des angegebenen Jahres zurück, im Beispiel 2023
+
+Nachdem du die Daten abgerufen hast, kannst du auf deiner Website anzeigen, z. B. als Diagramme.
+Der Code für den Abruf von der API könnte wie folgt aussehen:
+
+```js
+const fetchFromApi = async () => {
+  const id = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX";
+  const response = await fetch(`https://ff-agent-stats.vercel.app/api/latest?id=${id}`).catch(err => {
+    throw new Error(`could not fetch from API: ${err}`)
+  })
+  if (!response.ok) {
+    throw new Error(`API returned failure status code: ${response.status} ${response.statusText}`)
+  }
+  const text = await response.text().catch(err => {
+    throw new Error(`could not resolve response text: ${err}`)
+  })
+  return text;
+};
+```
+
+## Disclaimer
+
+Dieses Projekt ist in keiner Weise direkt mit dem ff-agent-Team oder -Produkt verbunden/unterstützt/bereitgestellt. Dies bedeutet auch, dass keinerlei Zusicherungen gemacht werden können, dass die Proxy-API weiterhin funktionieren wird, da sie vollständig von der verwendeten öffentlichen API von ff-agent abhängt.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# FF Agent Stats (EN)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). It proxies requests to the mission statistics API of the [ff-agent](https://www.ff-agent.com/) that can provide data for your help organization.
 
