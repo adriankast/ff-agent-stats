@@ -9,21 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "autoprefixer": "10.4.22",
-    "cors": "2.8.5",
-    "eslint": "9.39.3",
-    "eslint-config-next": "^14.2.35",
+    "autoprefixer": "^10.4.22",
+    "cors": "^2.8.5",
     "next": "^16.4.0",
-    "postcss": "8.5.23",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "postcss": "^8.5.23",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "tailwindcss": "^4.3.3",
-    "typescript": "5.9.3"
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@types/cors": "2.8.19",
-    "@types/node": "25.0.1",
-    "@types/react": "19.2.7",
-    "@types/react-dom": "19.2.3"
+    "@types/cors": "^2.8.19",
+    "@types/node": "^25.0.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.5",
+    "eslint-next-config": "^1.0.3"
   }
 }
