@@ -116,7 +116,7 @@ export default function Home() {
         {displayMode === "visual" ? (
           <DataDisplay data={data} lang="en" />
         ) : (
-          <pre className="w-64 break-words h-40">
+          <pre className="w-64 wrap-break-word h-40">
             <code>{data}</code>
           </pre>
         )}
